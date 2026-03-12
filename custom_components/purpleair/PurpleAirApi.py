@@ -520,8 +520,8 @@ class PurpleAirApi:
                 'rh_operating': rh_avg,
 
                 # Diagnostic values = real-time instantaneous readings
-                'temp_operating_realtime': float(result['current_temp_f']) if 'current_temp_f' in result else None,
-                'rh_operating_realtime': float(result['current_humidity']) if 'current_humidity' in result else None,
+                'temp_current': float(result['current_temp_f']) if 'current_temp_f' in result else None,
+                'rh_current': float(result['current_humidity']) if 'current_humidity' in result else None,
             }
 
             nodes[pa_sensor_id].update(process_pm_readings(result, rh_avg, is_dual))
