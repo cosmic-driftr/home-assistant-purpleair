@@ -86,8 +86,8 @@ class PurpleAirQualitySensor(SensorEntity):
         nice_entity_title = nice_entity_title.replace("PM2.5 Channel B", "PM2.5 Channel (B)")
         nice_entity_title = nice_entity_title.replace("Pm0 3 Count A", "PM0.3 Count (A)")
         nice_entity_title = nice_entity_title.replace("Pm0 3 Count B", "PM0.3 Count (B)")
-        nice_entity_title = nice_entity_title.replace("PM2.5 Aqi A", "PM2.5 AQI (A)")
-        nice_entity_title = nice_entity_title.replace("PM2.5 Aqi B", "PM2.5 AQI (B)")
+        nice_entity_title = nice_entity_title.replace("PM2.5 AQI A", "PM2.5 AQI (A)")
+        nice_entity_title = nice_entity_title.replace("PM2.5 AQI B", "PM2.5 AQI (B)")
         
         nice_entity_title = nice_entity_title.replace("PM1.0 Raw", "PM1.0 (Raw)")
         nice_entity_title = nice_entity_title.replace("PM2.5 Raw", "PM2.5 (Raw)")
