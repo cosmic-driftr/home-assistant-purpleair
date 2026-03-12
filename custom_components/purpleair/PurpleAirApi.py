@@ -497,8 +497,14 @@ class PurpleAirApi:
         for result in results:
             pa_sensor_id = result['SensorId']
             is_dual = 'pm2.5_aqi_b' in result
-            self._record_env_sample(pa_sensor_id, result)
             rh_avg, temp_avg = self._get_env_average(pa_sensor_id)
+
+            # Fallback if fast sampler has not populated history yet
+            if rh_avg is None and 'current_humidity' in result:
+                rh_avg = float(result['current_humidity'])
+            if temp_avg is None and 'current_temp_f' in result:
+                temp_avg = float(result['current_temp_f'])
+                
             gas_680 = round(float(result['gas_680']))
             
             nodes[pa_sensor_id] = {
