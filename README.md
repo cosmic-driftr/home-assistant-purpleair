@@ -19,15 +19,19 @@ To register a new purple air device:
 3. Give it a name.
 
 #### Current Sensors
-This will create 19 entities per device:
+
+This integration creates **17 primary sensor entities per device**. Per the device firmware, the exposed sensor data is a sampled average of the last 2 minutes. This does not apply to Temperature and Humdity, which are exposed as real-time values. For Home Assistant, sensor data is polled every 30 seconds.
+
+For PurpleAir devices with **two particle sensors (Channel A and Channel B)**, PM and AQI values are calculated using the **average of both sensors**. Devices with a single particle sensor simply report the value from that sensor.
+
 * Particulate Matter 1.0 (Raw)
 * Particulate Matter 2.5 (Raw)
 * Particulate Matter 2.5 (EPA)
 * Particulate Matter 2.5 (ALT CF=3.4 - Based on 0.3, 0.5, 2.5, 10.0 Particle Counts)
 * Particulate Matter 10.0 (Raw)
-* US Air Quality Index (Calculated using Raw PM2.5)
-* US Air Quality Index (Calculated using EPA PM2.5)
-* US Air Quality Index (Calculated using ALT CF=3.4 PM2.5)
+* US Air Quality Index (Calculated from Raw PM2.5)
+* US Air Quality Index (Calculated from EPA PM2.5)
+* US Air Quality Index (Calculated from ALT CF=3.4 PM2.5)
 * Humidity (Operating)
 * Humidity (Estimated)
 * Temperature (Operating)
@@ -35,12 +39,25 @@ This will create 19 entities per device:
 * Dewpoint (Adjusted sensor: re-calculated to take temp & humidity adjustments)
 * US Heat Index (Calculated from Estimated RH and Temp)
 * Pressure
-* WiFi Signal Strength (RSSI)
-* PM 2.5 Confidence Level (Good, Questionable or Severe)
 * VOC IAQ Index for Bosch BME680/688 Sensor
 * VOC IAQ Class for Bosch BME680/688 Sensor
 
-Sensor data queried from local device is an average of the last 2 minutes, not live data - i.e. "json?live=false". For Home Assistant, data is polled every 30 seconds
+#### Diagnostics
+
+10 diagnostic entities are created to expose raw sensor values from each channel and device status:
+
+* WiFi Signal Strength (RSSI)
+* PM 2.5 Confidence Level (Good, Questionable or Severe)
+* Sensor Placement (Inside / Outside)
+* Sensor Uptime
+* PM 2.5 Channel (A)
+* PM 2.5 Channel (B)
+* PM 2.5 AQI (A) – Raw AQI reported by the sensor
+* PM 2.5 AQI (B) – Raw AQI reported by the sensor
+* PM 0.3 Particle Count (A) (particles/dL)
+* PM 0.3 Particle Count (B) (particles/dL)
+
+Note: Channel B diagnostics are only available on **devices with two particle sensors**.
 
 ##### Adjusted Sensors
 In a similar manner to the actual purple air website, some sensors are adjusted manually to take into
