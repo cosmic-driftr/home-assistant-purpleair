@@ -80,7 +80,7 @@ def epa_pm25_correction_outdoor(pm25_atm, humidity):
     else:
         y = 2.966 + 0.69 * x + 8.84e-4 * (x ** 2)
 
-    return (max(0.0, y), 1)
+    return max(0.0, y)
 
 # EPA Correction for Indoor Sensors
 def epa_pm25_correction_indoor(pm25_cf1, humidity):
@@ -101,7 +101,7 @@ def epa_pm25_correction_indoor(pm25_cf1, humidity):
     else:
         y = 4.21e-4 * (x ** 2) + 0.392 * x + 3.44
 
-    return (max(0.0, y), 1)
+    return max(0.0, y)
 
 # Apply EPA Correction to Individual Sensors and Average
 def average_corrected(a_value, b_value, humidity, correction_fn):
@@ -111,11 +111,11 @@ def average_corrected(a_value, b_value, humidity, correction_fn):
     if a_corr is None and b_corr is None:
         return None
     if a_corr is None:
-        return round(b_corr, 1)
+        return b_corr
     if b_corr is None:
-        return round(a_corr, 1)
+        return a_corr
 
-    return round((a_corr + b_corr) / 2.0, 1)
+    return (a_corr + b_corr) / 2.0
 
 # Alternative CF-3.4 Correction for PM2.5
 def pm25_alt_from_counts(p03, p05, p10, p25):
@@ -135,7 +135,7 @@ def pm25_alt_from_counts(p03, p05, p10, p25):
 
     pm25_alt = 3.4 * (0.00030418 * n1 + 0.0018512 * n2 +0.02069706 * n3)
 
-    return round(max(0.0, pm25_alt), 1)
+    return max(0.0, pm25_alt)
 
 # Apply Alternative CF-3.4 Correction to Individual Sensors and Average
 def average_pm25_alt(a_counts, b_counts=None):
@@ -150,7 +150,7 @@ def average_pm25_alt(a_counts, b_counts=None):
     if b_alt is None:
         return a_alt
 
-    return round((a_alt + b_alt) / 2.0, 1)
+    return (a_alt + b_alt) / 2.0
 
 def calc_dewpoint(temp_f, humidity):
     """
@@ -184,10 +184,8 @@ def calc_heat_index(temp_f, humidity):
     c8 = 8.5282e-4
     c9 = -1.99e-6
 
-    return round(
-        c1 + c2*t + c3*rh + c4*t*rh + c5*t*t + c6*rh*rh +
-        c7*t*t*rh + c8*t*rh*rh + c9*t*t*rh*rh,
-        1
+    return c1 + c2*t + c3*rh + c4*t*rh + c5*t*t + c6*rh*rh + c7*t*t*rh + c8*t*rh*rh + c9*t*t*rh*rh
+        
     )
 
 
@@ -278,7 +276,7 @@ def process_pm_readings(json_result, is_dual = False):
                 epa_pm25_correction_indoor
             )
         else:
-            readings['pm2_5_epa'] = round(epa_pm25_correction_indoor(readings.get('pm2_5_cf_1'), humidity_raw), 1)
+            readings['pm2_5_epa'] = epa_pm25_correction_indoor(readings.get('pm2_5_cf_1'), humidity_raw)
 
     else:
         readings['pm1_0_raw'] = readings.get('pm1_0_atm')
@@ -294,7 +292,7 @@ def process_pm_readings(json_result, is_dual = False):
                 epa_pm25_correction_outdoor
             )
         else:
-            readings['pm2_5_epa'] = round(epa_pm25_correction_outdoor(readings.get('pm2_5_atm'), humidity_raw), 1)
+            readings['pm2_5_epa'] = epa_pm25_correction_outdoor(readings.get('pm2_5_atm'), humidity_raw)
 
     # Calculate AQI using PM2.5 Values
     readings['aqi_epa_raw_pm'] = calc_aqi(readings['pm2_5_raw'], 'pm2_5')
