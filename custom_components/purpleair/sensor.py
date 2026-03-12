@@ -81,8 +81,7 @@ class PurpleAirQualitySensor(SensorEntity):
         nice_entity_title = nice_entity_title.replace("Epa", "EPA")
         nice_entity_title = nice_entity_title.replace("Estimated", "(Estimated)")
         nice_entity_title = nice_entity_title.replace("Operating", "(Operating)")
-        nice_entity_title = nice_entity_title.replace("Temp (Operating) Realtime", "Temp (Operating RT)")
-        nice_entity_title = nice_entity_title.replace("RH (Operating) Realtime", "RH (Operating RT)")
+        nice_entity_title = nice_entity_title.replace("Current", "(Current)")
         
         nice_entity_title = nice_entity_title.replace("PM2.5 Channel A", "PM2.5 Channel (A)")
         nice_entity_title = nice_entity_title.replace("PM2.5 Channel B", "PM2.5 Channel (B)")
@@ -122,11 +121,11 @@ class PurpleAirQualitySensor(SensorEntity):
             "pm2_5_epa",
             "pm2_5_alt",
             "pm10_0_raw",
+            "temp_current,
             "temp_operating",
-            "temp_operating_realtime",
             "temp_estimated",
+            "rh_current",
             "rh_operating",
-            "rh_operating_realtime",
             "rh_estimated",
             "dewpoint",
             "heat_index",
