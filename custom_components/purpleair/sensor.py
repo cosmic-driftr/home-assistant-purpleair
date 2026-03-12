@@ -81,6 +81,8 @@ class PurpleAirQualitySensor(SensorEntity):
         nice_entity_title = nice_entity_title.replace("Epa", "EPA")
         nice_entity_title = nice_entity_title.replace("Estimated", "(Estimated)")
         nice_entity_title = nice_entity_title.replace("Operating", "(Operating)")
+        nice_entity_title = nice_entity_title.replace("Temp (Operating) Realtime", "Temperature (Operating RT")
+        nice_entity_title = nice_entity_title.replace("RH (Operating) Realtime", "Humidity (Operating RT")
         
         nice_entity_title = nice_entity_title.replace("PM2.5 Channel A", "PM2.5 Channel (A)")
         nice_entity_title = nice_entity_title.replace("PM2.5 Channel B", "PM2.5 Channel (B)")
