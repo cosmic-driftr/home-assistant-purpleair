@@ -115,14 +115,16 @@ class PurpleAirQualitySensor(SensorEntity):
     
         # 1 decimal sensors
         if self.idx in {
-            "pm1_0_raw",
+             "pm1_0_raw",
             "pm2_5_raw",
             "pm2_5_epa",
             "pm2_5_alt",
             "pm10_0_raw",
             "temp_operating",
+            "temp_operating_realtime",
             "temp_estimated",
             "rh_operating",
+            "rh_operating_realtime",
             "rh_estimated",
             "dewpoint",
             "heat_index",
