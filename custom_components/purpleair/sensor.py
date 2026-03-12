@@ -29,6 +29,7 @@ class PurpleAirQualitySensor(SensorEntity):
         self._icon = entity_desc.get('icon')
         self._src_key = entity_desc.get('key')
         self._device_class = entity_desc.get('device_class')
+        self._entity_category = entity_desc.get('entity_category')
 
         self.idx = index
         self.pa_sensor_id = self._data['id']
@@ -60,7 +61,11 @@ class PurpleAirQualitySensor(SensorEntity):
     def device_class(self):
         """Return the device class."""
         return self._device_class
-
+        
+    @property
+    def entity_category(self):
+        return self._entity_category
+    
     @property
     def icon(self):
         return self._icon
@@ -74,19 +79,31 @@ class PurpleAirQualitySensor(SensorEntity):
         nice_entity_title = nice_entity_title.replace("Rh", "RH")
         nice_entity_title = nice_entity_title.replace("Aqi", "AQI")
         nice_entity_title = nice_entity_title.replace("Epa", "EPA")
+        nice_entity_title = nice_entity_title.replace("Estimated", "(Estimated)")
+        nice_entity_title = nice_entity_title.replace("Operating", "(Operating)")
+        
+        nice_entity_title = nice_entity_title.replace("PM2.5 Channel A", "PM2.5 Channel (A)")
+        nice_entity_title = nice_entity_title.replace("PM2.5 Channel B", "PM2.5 Channel (B)")
+        nice_entity_title = nice_entity_title.replace("Pm0 3 Count A", "PM0.3 Count (A)")
+        nice_entity_title = nice_entity_title.replace("Pm0 3 Count B", "PM0.3 Count (B)")
+        nice_entity_title = nice_entity_title.replace("PM2.5 Aqi A", "PM2.5 AQI (A)")
+        nice_entity_title = nice_entity_title.replace("PM2.5 Aqi B", "PM2.5 AQI (B)")
+        
         nice_entity_title = nice_entity_title.replace("PM1.0 Raw", "PM1.0 (Raw)")
         nice_entity_title = nice_entity_title.replace("PM2.5 Raw", "PM2.5 (Raw)")
         nice_entity_title = nice_entity_title.replace("PM10 Raw", "PM10 (Raw)")
         nice_entity_title = nice_entity_title.replace("PM2.5 EPA", "PM2.5 (EPA)")
         nice_entity_title = nice_entity_title.replace("PM2.5 Alt", "PM2.5 (ALT CF=3.4)")
+        
         nice_entity_title = nice_entity_title.replace("AQI EPA Raw Pm", "US AQI (Raw PM2.5)")
         nice_entity_title = nice_entity_title.replace("AQI EPA Cor Pm", "US AQI (EPA PM2.5)")
         nice_entity_title = nice_entity_title.replace("AQI EPA Alt Pm", "US AQI (ALT CF=3.4)")
+        
         nice_entity_title = nice_entity_title.replace("Voc Iaq Index", "VOC IAQ Index")
         nice_entity_title = nice_entity_title.replace("Voc Iaq Class", "VOC IAQ Class")
-        nice_entity_title = nice_entity_title.replace("Estimated", "(Estimated)")
-        nice_entity_title = nice_entity_title.replace("Operating", "(Operating)")
+        
         nice_entity_title = nice_entity_title.replace("Rssi", "WiFi Signal (RSSI)")
+        nice_entity_title = nice_entity_title.replace("Uptime", "Sensor Uptime")
         return f'{self.pa_sensor_name} {nice_entity_title}'
 
     @property
@@ -98,17 +115,21 @@ class PurpleAirQualitySensor(SensorEntity):
     
         # 1 decimal sensors
         if self.idx in {
-            "dewpoint",
-            "heat_index",
-            "temp_operating",
-            "temp_estimated",
-            "rh_operating",
-            "rh_estimated",
             "pm1_0_raw",
             "pm2_5_raw",
             "pm2_5_epa",
             "pm2_5_alt",
             "pm10_0_raw",
+            "temp_operating",
+            "temp_estimated",
+            "rh_operating",
+            "rh_estimated",
+            "dewpoint",
+            "heat_index",
+            "pm0_3_count_a",
+            "pm0_3_count_b",
+            "pm2_5_channel_a",
+            "pm2_5_channel_b",
         }:
             return round(value, 1)
     
@@ -135,7 +156,7 @@ class PurpleAirQualitySensor(SensorEntity):
     @property
     def available(self):
         return self._api.is_node_registered(self.pa_sensor_id)
-
+    
     async def async_added_to_hass(self):
         self._api.register_node(self.pa_sensor_id, self.pa_ip_address)
         self._stop_listening = async_dispatcher_connect(

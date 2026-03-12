@@ -1,6 +1,7 @@
 """Constants for the Purple Air integration."""
 from homeassistant.const import UnitOfTemperature, UnitOfPressure
 from homeassistant.components.sensor import SensorDeviceClass
+from homeassistant.helpers.entity import EntityCategory
 
 AQI_BREAKPOINTS = {
     'pm2_5': [
@@ -42,15 +43,25 @@ PARTICLE_PROPS = ['pm1_0_atm', 'pm2_5_atm', 'pm10_0_atm', 'pm1_0_cf_1', 'pm2_5_c
 
 # Map of sensors to create entities for
 SENSORS_MAP = {
-    'sensor_confidence':       {'key': 'pm2_5_raw_conf',   'uom': None, 'device_class': None, 'icon': 'mdi:seal'},
+    'sensor_confidence':       {'key': 'pm2_5_raw_conf',   'uom': None, 'device_class': None, 'icon': 'mdi:seal', 'entity_category': EntityCategory.DIAGNOSTIC},
+    'pm2_5_channel_a':         {'key': 'pm2_5_channel_a',  'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM25, 'icon': 'mdi:blur', 'entity_category': EntityCategory.DIAGNOSTIC},
+    'pm2_5_channel_b':         {'key': 'pm2_5_channel_b',  'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM25, 'icon': 'mdi:blur', 'entity_category': EntityCategory.DIAGNOSTIC},
+    'pm0_3_count_a':           {'key': 'pm0_3_count_a',    'uom': 'particles/dL', 'device_class': None, 'icon': 'mdi:dots-grid', 'entity_category': EntityCategory.DIAGNOSTIC},
+    'pm0_3_count_b':           {'key': 'pm0_3_count_b',    'uom': 'particles/dL', 'device_class': None, 'icon': 'mdi:dots-grid', 'entity_category': EntityCategory.DIAGNOSTIC},
+    'pm2_5_aqi_a':             {'key': 'pm2_5_aqi_a',      'uom': None, 'device_class': SensorDeviceClass.AQI, 'icon': 'mdi:weather-hazy', 'entity_category': EntityCategory.DIAGNOSTIC},
+    'pm2_5_aqi_b':             {'key': 'pm2_5_aqi_b',      'uom': None, 'device_class': SensorDeviceClass.AQI, 'icon': 'mdi:weather-hazy', 'entity_category': EntityCategory.DIAGNOSTIC},
+    'placement':               {'key': 'device_location',  'uom': None, 'device_class': None, 'icon': 'mdi:map-marker', 'entity_category': EntityCategory.DIAGNOSTIC},
+
     'pm1_0_raw':               {'key': 'pm1_0_raw',        'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM1,  'icon': 'mdi:blur'},
     'pm2_5_raw':               {'key': 'pm2_5_raw',        'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM25, 'icon': 'mdi:blur'},
     'pm2_5_epa':               {'key': 'pm2_5_epa',        'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM25, 'icon': 'mdi:blur'},
     'pm2_5_alt':               {'key': 'pm2_5_alt',        'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM25, 'icon': 'mdi:blur'},
     'pm10_0_raw':              {'key': 'pm10_0_raw',       'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM10, 'icon': 'mdi:blur'},
+    
     'aqi_epa_raw_pm':          {'key': 'aqi_epa_raw_pm',   'uom': None, 'device_class': SensorDeviceClass.AQI, 'icon': 'mdi:weather-hazy'},
     'aqi_epa_cor_pm':          {'key': 'aqi_epa_cor_pm',   'uom': None, 'device_class': SensorDeviceClass.AQI, 'icon': 'mdi:weather-hazy'},
     'aqi_epa_alt_pm':          {'key': 'aqi_epa_alt_pm',   'uom': None, 'device_class': SensorDeviceClass.AQI, 'icon': 'mdi:weather-hazy'},
+
     'rh_operating':            {'key': 'rh_operating',     'uom': '%', 'device_class': SensorDeviceClass.HUMIDITY, 'icon': 'mdi:water-percent'},
     'rh_estimated':            {'key': 'rh_estimated',     'uom': '%', 'device_class': SensorDeviceClass.HUMIDITY, 'icon': 'mdi:water-percent'},
     'temp_operating':          {'key': 'temp_operating',   'uom': UnitOfTemperature.FAHRENHEIT, 'device_class': SensorDeviceClass.TEMPERATURE, 'icon': 'mdi:thermometer'},
@@ -58,9 +69,12 @@ SENSORS_MAP = {
     'dewpoint':                {'key': 'current_dewpoint', 'uom': UnitOfTemperature.FAHRENHEIT, 'device_class': SensorDeviceClass.TEMPERATURE, 'icon': 'mdi:water-outline'},
     'heat_index':              {'key': 'heat_index',       'uom': UnitOfTemperature.FAHRENHEIT, 'device_class': SensorDeviceClass.TEMPERATURE, 'icon': 'mdi:thermometer-alert'},
     'pressure':                {'key': 'pressure',         'uom': UnitOfPressure.HPA, 'device_class': SensorDeviceClass.PRESSURE, 'icon': 'mdi:gauge'},
-    'rssi':                    {'key': 'rssi',             'uom': 'dBm', 'device_class': SensorDeviceClass.SIGNAL_STRENGTH, 'icon': 'mdi:wifi'},
+
     'voc_iaq_index':           {'key': 'gas_680',          'uom': None, 'device_class': None, 'icon': 'mdi:flask-outline'},
-    'voc_iaq_class':           {'key': 'voc_iaq_class',    'uom': None, 'device_class': None, 'icon': 'mdi:home-air-filter'},
+    'voc_iaq_class':           {'key': 'voc_iaq_class',    'uom': None, 'device_class': None, 'icon': 'mdi:air-filter'},
+    
+    'rssi':                    {'key': 'rssi',             'uom': 'dBm', 'device_class': SensorDeviceClass.SIGNAL_STRENGTH, 'icon': 'mdi:wifi', 'entity_category': EntityCategory.DIAGNOSTIC},
+    'uptime':                  {'key': 'uptime',           'uom': 's', 'device_class': None, 'icon': 'mdi:timer-outline', 'entity_category': EntityCategory.DIAGNOSTIC},
 }
 
 MANUFACTURER = 'Purple Air'
