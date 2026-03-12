@@ -430,9 +430,6 @@ class PurpleAirApi:
                 'gas_680': gas_680,
                 'voc_iaq_class': classify_voc_iaq(gas_680),
                 'uptime': result.get('uptime'),
-                'firmware_version': result.get('version'),
-                'hardware_version': result.get('hardwareversion'),
-                'hardware_discovered': result.get('hardwarediscovered'),
             }
             nodes[pa_sensor_id].update(process_pm_readings(result, is_dual))
             nodes[pa_sensor_id].update(process_heat_adjustments(result))
