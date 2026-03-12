@@ -78,19 +78,18 @@ enhance, and redistribute as you see fit.
 ### 2.2.0
 
 **New Features**
-- Added EPA and ALT CF=3.4 PM2.5 correction calculations
+- Added EPA and ALT CF=3.4 corrections for PM2.5 and AQI score
 - Added automatic handling for indoor vs outdoor sensors
-- Added Heat Index calculation
-- Added VOC IAQ index and classification sensors (experimental according to PurpleAir)
+- Added Heat Index 
+- Added VOC IAQ index and classification (experimental according to PurpleAir)
 
 **Diagnostics**
 - Added diagnostic entities for each PM sensor channel (A/B)
 - Added particle count diagnostics (PM0.3)
-- Added device status diagnostics including sensor placement, uptime, and WiFi signal
+- Added device status diagnostics including sensor placement, uptime, and WiFi signal strength
 
 **Improvements**
 - Output both raw and corrected values for PM2.5 and AQI
-- Output operating and estimated Temperature and Humidity values
 - Updated temperature and humidity correction equations
 
 **Cleanup**
