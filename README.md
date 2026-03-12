@@ -52,8 +52,8 @@ enhance, and redistribute as you see fit.
 
 ## Releases
 
-### 2.1.11
-Updated equations for estimated Temperature and RH to account for indoor vs outdoor placement. Added output for Heat Index. v2.1.9 and v2.1.10 were minor code fixes.
+### 2.1.12
+Updated equations for estimated Temperature and RH to account for indoor vs outdoor placement. Added output for Heat Index.
 
 ### 2.1.8
 Added ouputs for VOC, which is experimental according to PurpleAir. Added placeholder code for 2024 NAAQS AQI Breakpoints. To be implemented in future revision once PurpleAir confirms transitioning to these new guidelines. 
