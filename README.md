@@ -19,7 +19,7 @@ To register a new purple air device:
 3. Give it a name.
 
 #### Current Sensors
-This will create 18 entities per device:
+This will create 19 entities per device:
 * Particulate Matter 1.0 (Raw)
 * Particulate Matter 2.5 (Raw)
 * Particulate Matter 2.5 (EPA)
@@ -33,6 +33,7 @@ This will create 18 entities per device:
 * Temperature (Operating)
 * Temperature (Estimated)
 * Dewpoint (Adjusted sensor: re-calculated to take temp & humidity adjustments)
+* US Heat Index (Calculated from Estimated RH and Temp)
 * Pressure
 * WiFi Signal Strength (RSSI)
 * PM 2.5 Confidence Level (Good, Questionable or Severe)
@@ -51,11 +52,8 @@ enhance, and redistribute as you see fit.
 
 ## Releases
 
-### 2.1.10
-Changed VOC state class to measurement so it can be graphed in Home Assistant.
-
-### 2.1.9
-Forgot to add comma in const.py.
+### 2.1.11
+Updated equations for estimated Temperature and RH to account for indoor vs outdoor placement. Added output for Heat Index. v2.1.9 and v2.1.10 were minor code fixes.
 
 ### 2.1.8
 Added ouputs for VOC, which is experimental according to PurpleAir. Added placeholder code for 2024 NAAQS AQI Breakpoints. To be implemented in future revision once PurpleAir confirms transitioning to these new guidelines. 
