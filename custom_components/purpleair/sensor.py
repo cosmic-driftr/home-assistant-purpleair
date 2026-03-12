@@ -91,7 +91,32 @@ class PurpleAirQualitySensor(SensorEntity):
 
     @property
     def native_value(self):
-        return self._api.get_reading(self.pa_sensor_id, self._src_key)
+        value = self._api.get_reading(self.pa_sensor_id, self._src_key)
+    
+        if not isinstance(value, float):
+            return value
+    
+        # 1 decimal sensors
+        if self.idx in {
+            "dewpoint",
+            "heat_index",
+            "temp_operating",
+            "temp_estimated",
+            "rh_operating",
+            "rh_estimated",
+            "pm1_0_raw",
+            "pm2_5_raw",
+            "pm2_5_epa",
+            "pm2_5_alt",
+            "pm10_0_raw",
+        }:
+            return round(value, 1)
+    
+        # pressure usually looks better with 2 decimals
+        if self.idx == "pressure":
+            return round(value, 2)
+    
+        return value
 
     @property
     def state_class(self):
