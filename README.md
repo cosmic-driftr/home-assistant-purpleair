@@ -26,7 +26,7 @@ To register a new purple air device:
 
 #### Current Sensors
 
-This integration creates **17 primary sensor entities per device**. Per the device firmware, the exposed sensor data is a sampled average of the last 2 minutes. This does not apply to Temperature and Humdity, which are exposed as real-time values. For Home Assistant, sensor data is polled every 30 seconds.
+This integration creates **17 primary sensor entities per device**. Per the device firmware, the exposed sensor data is a sampled average of the last 2 minutes. Temperature and humidity are exposed as real-time values, so this code samples the data every 5 seconds and records the 2 minute rolling average. For Home Assistant, sensor data is polled every 30 seconds.
 
 For PurpleAir devices with **two particle sensors (Channel A and Channel B)**, PM and AQI values are calculated using the **average of both sensors**. Devices with a single particle sensor simply report the value from that sensor.
 
@@ -53,7 +53,7 @@ account the fact that the housing itself increases the temperature and has reduc
 
 #### Diagnostics
 
-10 diagnostic entities are created to expose raw sensor values from each channel and device status:
+12 diagnostic entities are created to expose raw sensor values from each channel and device status:
 
 * WiFi Signal Strength (RSSI)
 * PM 2.5 Confidence Level (Good, Questionable or Severe)
@@ -65,6 +65,8 @@ account the fact that the housing itself increases the temperature and has reduc
 * PM 2.5 AQI (B) – Raw AQI reported by the sensor
 * PM 0.3 Particle Count (A) (particles/dL)
 * PM 0.3 Particle Count (B) (particles/dL)
+* Humidity (Current)
+* Temperature (Current)
 
 Note: Channel B diagnostics are only available on **devices with two particle sensors**.
 
