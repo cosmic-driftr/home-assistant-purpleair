@@ -52,7 +52,7 @@ enhance, and redistribute as you see fit.
 
 ## Releases
 
-### 2.1.14
+### 2.1.15
 Updated equations for estimated Temperature and RH to account for indoor vs outdoor placement. Added output for Heat Index.
 
 ### 2.1.8
