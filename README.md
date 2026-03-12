@@ -42,6 +42,10 @@ For PurpleAir devices with **two particle sensors (Channel A and Channel B)**, P
 * VOC IAQ Index for Bosch BME680/688 Sensor
 * VOC IAQ Class for Bosch BME680/688 Sensor
 
+##### Adjusted Sensors
+In a similar manner to the actual purple air website, some sensors are adjusted manually to take into
+account the fact that the housing itself increases the temperature and has reduced humidity.
+
 #### Diagnostics
 
 10 diagnostic entities are created to expose raw sensor values from each channel and device status:
@@ -59,10 +63,7 @@ For PurpleAir devices with **two particle sensors (Channel A and Channel B)**, P
 
 Note: Channel B diagnostics are only available on **devices with two particle sensors**.
 
-##### Adjusted Sensors
-In a similar manner to the actual purple air website, some sensors are adjusted manually to take into
-account the fact that the housing itself increases the temperature and has reduced humidity. Calculated
-sensors are marked above.
+## License
 
 This component is licensed under the MIT license, so feel free to copy,
 enhance, and redistribute as you see fit.
