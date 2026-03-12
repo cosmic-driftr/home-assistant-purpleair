@@ -74,6 +74,10 @@ class PurpleAirQualitySensor(SensorEntity):
         nice_entity_title = nice_entity_title.replace("Rh", "RH")
         nice_entity_title = nice_entity_title.replace("Aqi", "AQI")
         nice_entity_title = nice_entity_title.replace("Epa", "EPA")
+        nice_entity_title = nice_entity_title.replace("Pm0 3 Count A", "PM0.3 Count (A)")
+        nice_entity_title = nice_entity_title.replace("Pm0 3 Count B", "PM0.3 Count (B)")
+        nice_entity_title = nice_entity_title.replace("PM2.5 Raw A", "PM2.5 Raw (A)")
+        nice_entity_title = nice_entity_title.replace("PM2.5 Raw B", "PM2.5 Raw (B)")
         nice_entity_title = nice_entity_title.replace("PM1.0 Raw", "PM1.0 (Raw)")
         nice_entity_title = nice_entity_title.replace("PM2.5 Raw", "PM2.5 (Raw)")
         nice_entity_title = nice_entity_title.replace("PM10 Raw", "PM10 (Raw)")
@@ -98,17 +102,21 @@ class PurpleAirQualitySensor(SensorEntity):
     
         # 1 decimal sensors
         if self.idx in {
-            "dewpoint",
-            "heat_index",
-            "temp_operating",
-            "temp_estimated",
-            "rh_operating",
-            "rh_estimated",
+            "pm0_3_count_a",
+            "pm0_3_count_b",
+            "pm2_5_raw_a",
+            "pm2_5_raw_b",
             "pm1_0_raw",
             "pm2_5_raw",
             "pm2_5_epa",
             "pm2_5_alt",
             "pm10_0_raw",
+            "temp_operating",
+            "temp_estimated",
+            "rh_operating",
+            "rh_estimated",
+            "dewpoint",
+            "heat_index",
         }:
             return round(value, 1)
     
