@@ -51,8 +51,8 @@ SENSORS_MAP = {
     'pm2_5_aqi_a':             {'key': 'pm2_5_aqi_a',      'uom': None, 'device_class': SensorDeviceClass.AQI, 'icon': 'mdi:weather-hazy', 'entity_category': EntityCategory.DIAGNOSTIC},
     'pm2_5_aqi_b':             {'key': 'pm2_5_aqi_b',      'uom': None, 'device_class': SensorDeviceClass.AQI, 'icon': 'mdi:weather-hazy', 'entity_category': EntityCategory.DIAGNOSTIC},
     'placement':               {'key': 'device_location',  'uom': None, 'device_class': None, 'icon': 'mdi:map-marker', 'entity_category': EntityCategory.DIAGNOSTIC},
-    'temp_operating_realtime': {'key': 'temp_operating_realtime', 'uom': UnitOfTemperature.FAHRENHEIT, 'device_class': SensorDeviceClass.TEMPERATURE, 'icon': 'mdi:thermometer', 'entity_category': EntityCategory.DIAGNOSTIC},
-    'rh_operating_realtime':   {'key': 'rh_operating_realtime',   'uom': '%', 'device_class': SensorDeviceClass.HUMIDITY, 'icon': 'mdi:water-percent', 'entity_category': EntityCategory.DIAGNOSTIC},
+    'temp_current':            {'key': 'temp_current',     'uom': UnitOfTemperature.FAHRENHEIT, 'device_class': SensorDeviceClass.TEMPERATURE, 'icon': 'mdi:thermometer', 'entity_category': EntityCategory.DIAGNOSTIC},
+    'rh_current':              {'key': 'rh_current',       'uom': '%', 'device_class': SensorDeviceClass.HUMIDITY, 'icon': 'mdi:water-percent', 'entity_category': EntityCategory.DIAGNOSTIC},
 
     'pm1_0_raw':               {'key': 'pm1_0_raw',        'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM1,  'icon': 'mdi:blur'},
     'pm2_5_raw':               {'key': 'pm2_5_raw',        'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM25, 'icon': 'mdi:blur'},
