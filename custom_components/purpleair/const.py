@@ -50,6 +50,7 @@ SENSORS_MAP = {
     'pm0_3_count_b':           {'key': 'pm0_3_count_b',    'uom': 'particles/dL', 'device_class': None, 'icon': 'mdi:dots-grid', 'entity_category': EntityCategory.DIAGNOSTIC},
     'pm2_5_aqi_a':             {'key': 'pm2_5_aqi_a',      'uom': None, 'device_class': SensorDeviceClass.AQI, 'icon': 'mdi:weather-hazy', 'entity_category': EntityCategory.DIAGNOSTIC},
     'pm2_5_aqi_b':             {'key': 'pm2_5_aqi_b',      'uom': None, 'device_class': SensorDeviceClass.AQI, 'icon': 'mdi:weather-hazy', 'entity_category': EntityCategory.DIAGNOSTIC},
+    'placement':               {'key': 'device_location',  'uom': None, 'device_class': None, 'icon': 'mdi:map-marker', 'entity_category': EntityCategory.DIAGNOSTIC},
 
     'pm1_0_raw':               {'key': 'pm1_0_raw',        'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM1,  'icon': 'mdi:blur'},
     'pm2_5_raw':               {'key': 'pm2_5_raw',        'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM25, 'icon': 'mdi:blur'},
