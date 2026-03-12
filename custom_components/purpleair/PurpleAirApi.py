@@ -185,8 +185,6 @@ def calc_heat_index(temp_f, humidity):
     c9 = -1.99e-6
 
     return c1 + c2*t + c3*rh + c4*t*rh + c5*t*t + c6*rh*rh + c7*t*t*rh + c8*t*rh*rh + c9*t*t*rh*rh
-        
-    )
 
 
 def process_heat_adjustments(json_result):
