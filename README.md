@@ -70,16 +70,27 @@ enhance, and redistribute as you see fit.
 ## Releases
 
 ### 2.2.0
-Added EPA and ALT CF=3.4 correction equations for PM2.5.
-Added logic for outdoor vs indoor sensors. 
-Removed LRAPA AQI calculation. 
-Removed redundant variables. 
-Updated equations for estimated Temperature and RH. 
-Output raw and corrected values for PM2.5, AQI, Temperature, and RH. 
-Show calculated Heat Index. 
-Added diagnostic entities for each channel and device status. 
-Added ouputs for VOC, which is experimental according to PurpleAir. 
-Added placeholder code for 2024 NAAQS AQI Breakpoints. To be implemented in future revision once PurpleAir confirms transitioning to these new guidelines. 
+
+**New Features**
+- Added EPA and ALT CF=3.4 PM2.5 correction calculations
+- Added automatic handling for indoor vs outdoor sensors
+- Added calculated Heat Index
+- Added VOC IAQ index and classification sensors (experimental according to PurpleAir)
+
+**Diagnostics**
+- Added diagnostic entities for each PM sensor channel (A/B)
+- Added particle count diagnostics (PM0.3)
+- Added device status diagnostics including sensor placement, uptime, and WiFi signal
+
+**Improvements**
+- Output both raw and corrected values for PM2.5 and AQI
+- Output operating and estimated Temperature and Humidity values
+- Updated temperature and humidity correction equations
+
+**Cleanup**
+- Removed LRAPA AQI calculation
+- Removed redundant variables
+- Added placeholder code for 2024 NAAQS AQI breakpoints (to be implemented once PurpleAir confirms transition)
 
 ### 2.1.6
 Fix error from giving AQI a unit. HA wants aqi set to none
