@@ -74,7 +74,7 @@ enhance, and redistribute as you see fit.
 **New Features**
 - Added EPA and ALT CF=3.4 PM2.5 correction calculations
 - Added automatic handling for indoor vs outdoor sensors
-- Added calculated Heat Index
+- Added Heat Index calculation
 - Added VOC IAQ index and classification sensors (experimental according to PurpleAir)
 
 **Diagnostics**
