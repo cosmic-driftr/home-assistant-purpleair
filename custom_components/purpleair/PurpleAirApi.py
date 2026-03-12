@@ -220,7 +220,7 @@ def process_heat_adjustments(temp_operating, rh_operating, place):
     }
 
 
-def process_pm_readings(json_result, is_dual = False):
+def process_pm_readings(json_result, rh_operating, is_dual=False):
     """Processes Particle mass readings and confidence of said readings"""
     readings = {'pm2_5_aqi_raw': json_result['pm2.5_aqi']}
     if is_dual:
@@ -242,7 +242,7 @@ def process_pm_readings(json_result, is_dual = False):
         readings[prop] = value
         readings[f'{prop}_conf'] = confidence
 
-    humidity_raw = json_result.get('current_humidity')
+    humidity_raw = rh_operating
     place = str(json_result.get('place', '')).strip().lower()
 
     # Diagnostic channel/count/AQI values
@@ -497,17 +497,29 @@ class PurpleAirApi:
         for result in results:
             pa_sensor_id = result['SensorId']
             is_dual = 'pm2.5_aqi_b' in result
+            self._record_env_sample(pa_sensor_id, result)
+            rh_avg, temp_avg = self._get_env_average(pa_sensor_id)
             gas_680 = round(float(result['gas_680']))
+            
             nodes[pa_sensor_id] = {
-                'device_location': result['place'],
-                'rssi': result['rssi'],
-                'pressure': result['pressure'],
+                'device_location': result.get('place'),
+                'rssi': result.get('rssi'),
+                'pressure': result.get('pressure'),
                 'gas_680': gas_680,
                 'voc_iaq_class': classify_voc_iaq(gas_680),
                 'uptime': result.get('uptime'),
+
+                # Main operating values = 2-minute rolling average
+                'temp_operating': temp_avg,
+                'rh_operating': rh_avg,
+
+                # Diagnostic values = real-time instantaneous readings
+                'temp_operating_realtime': float(result['current_temp_f']) if 'current_temp_f' in result else None,
+                'rh_operating_realtime': float(result['current_humidity']) if 'current_humidity' in result else None,
             }
-            nodes[pa_sensor_id].update(process_pm_readings(result, is_dual))
-            nodes[pa_sensor_id].update(process_heat_adjustments(result))
+
+            nodes[pa_sensor_id].update(process_pm_readings(result, rh_avg, is_dual))
+            nodes[pa_sensor_id].update(process_heat_adjustments(temp_avg, rh_avg, result.get('place')))
             _LOGGER.debug('Json results for %s: %s', pa_sensor_id, result)
             _LOGGER.debug('Readings for %s: %s', pa_sensor_id, nodes[pa_sensor_id])
 
