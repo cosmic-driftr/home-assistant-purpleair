@@ -214,7 +214,7 @@ def process_heat_adjustments(json_result):
         'rh_operating': raw_rh,
         'temp_estimated': temp_est,
         'rh_estimated': rh_est,
-        'current_dewpoint': calc_dewpoint(temp_est, rh_est)
+        'current_dewpoint': calc_dewpoint(temp_est, rh_est),
         'heat_index': calc_heat_index(temp_est, rh_est),
     }
 
