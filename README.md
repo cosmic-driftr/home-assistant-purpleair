@@ -3,7 +3,7 @@ This is an integration for home assistant that polls sensor data from PurpleAir
 devices on your local network. It creates one device per Purple Air device registered and several sensors
 for each several readings.
 
-## Project Origin
+### Project Origin
 
 This integration is based on the PurpleAir Home Assistant integration originally developed by  
 https://github.com/catchdave/home-assistant-purpleair
