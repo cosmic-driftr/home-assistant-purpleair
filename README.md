@@ -1,17 +1,11 @@
 ## Local Purple Air Integration
 This is an integration for home assistant that polls sensor data from PurpleAir 
-devices on your local network. It creates one device per Purple Air device registered and several sensors
+devices on your local network.
+
+_Code adapted from https://github.com/catchdave/home-assistant-purpleair_
+
+It creates one device per Purple Air device registered and several sensors
 for each several readings.
-
-### Project Origin
-
-This integration is based on the PurpleAir Home Assistant integration originally developed by  
-https://github.com/catchdave/home-assistant-purpleair
-
-The version used as the starting point for this repository was maintained by  
-https://github.com/ryushi32/home-assistant-purpleair
-
-Development in this fork begins with version **2.2.0**.
 
 ### Installation
 
@@ -75,27 +69,14 @@ enhance, and redistribute as you see fit.
 
 ## Releases
 
-### 2.2.0
+### 2.1.16
+Updated equations for estimated Temperature and RH to account for indoor vs outdoor placement. Added output for Heat Index. Added diagnostic entities for each channel and device status. 
 
-**New Features**
-- Added EPA and ALT CF=3.4 corrections for PM2.5 and AQI score
-- Added automatic handling for indoor vs outdoor sensors
-- Added Heat Index 
-- Added VOC IAQ index and classification (experimental according to PurpleAir)
+### 2.1.8
+Added ouputs for VOC, which is experimental according to PurpleAir. Added placeholder code for 2024 NAAQS AQI Breakpoints. To be implemented in future revision once PurpleAir confirms transitioning to these new guidelines. 
 
-**Diagnostics**
-- Added diagnostic entities for each PM sensor channel (A/B)
-- Added particle count diagnostics (PM0.3)
-- Added device status diagnostics including sensor placement, uptime, and WiFi signal strength
-
-**Improvements**
-- Output both raw and corrected values for PM2.5 and AQI
-- Updated temperature and humidity correction equations
-
-**Cleanup**
-- Removed LRAPA AQI calculation
-- Removed redundant variables
-- Added placeholder code for 2024 NAAQS AQI breakpoints (to be implemented once PurpleAir confirms transition)
+### 2.1.7
+Added EPA and ALT CF=3.4 correction equations for PM2.5. Added logic for outdoor vs indoor sensors. Removed LRAPA AQI calculation. Removed redundant variables. Updated equations for estimated Temperature and RH. Output raw and corrected values for PM2.5, AQI, Temperature, and RH. 
 
 ### 2.1.6
 Fix error from giving AQI a unit. HA wants aqi set to none
