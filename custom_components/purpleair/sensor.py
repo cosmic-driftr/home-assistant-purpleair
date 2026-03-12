@@ -121,7 +121,7 @@ class PurpleAirQualitySensor(SensorEntity):
             "pm2_5_epa",
             "pm2_5_alt",
             "pm10_0_raw",
-            "temp_current,
+            "temp_current",
             "temp_operating",
             "temp_estimated",
             "rh_current",
