@@ -240,6 +240,18 @@ def process_pm_readings(json_result, is_dual = False):
     humidity_raw = json_result.get('current_humidity')
     place = str(json_result.get('place', '')).strip().lower()
 
+    # Per-channel particle count debug values
+    readings['pm0_3_count_a'] = float(json_result['p_0_3_um']) if 'p_0_3_um' in json_result else None
+    readings['pm0_3_count_b'] = float(json_result['p_0_3_um_b']) if 'p_0_3_um_b' in json_result else None
+
+    # Per-channel raw PM2.5 debug values
+    if place == 'inside':
+        readings['pm2_5_raw_a'] = float(json_result['pm2_5_cf_1']) if 'pm2_5_cf_1' in json_result else None
+        readings['pm2_5_raw_b'] = float(json_result['pm2_5_cf_1_b']) if 'pm2_5_cf_1_b' in json_result else None
+    else:
+        readings['pm2_5_raw_a'] = float(json_result['pm2_5_atm']) if 'pm2_5_atm' in json_result else None
+        readings['pm2_5_raw_b'] = float(json_result['pm2_5_atm_b']) if 'pm2_5_atm_b' in json_result else None
+    
     # PM2.5 ALT (cf=3.4) from particle counts
     a_counts = (
         json_result.get('p_0_3_um'),
