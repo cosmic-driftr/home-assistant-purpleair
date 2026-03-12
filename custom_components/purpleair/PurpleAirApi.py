@@ -244,8 +244,8 @@ def process_pm_readings(json_result, is_dual = False):
     readings['pm0_3_count_a'] = float(json_result['p_0_3_um']) if 'p_0_3_um' in json_result else None
     readings['pm0_3_count_b'] = float(json_result['p_0_3_um_b']) if is_dual and 'p_0_3_um_b' in json_result else None
 
-    readings['pm2_5_aqi_a'] = float(json_result['pm2.5_aqi']) if 'pm2.5_aqi' in json_result else None
-    readings['pm2_5_aqi_b'] = float(json_result['pm2.5_aqi_b']) if is_dual and 'pm2.5_aqi_b' in json_result else None
+    readings['pm2_5_aqi_a'] = int(json_result['pm2.5_aqi']) if 'pm2.5_aqi' in json_result else None
+    readings['pm2_5_aqi_b'] = int(json_result['pm2.5_aqi_b']) if is_dual and 'pm2.5_aqi_b' in json_result else None
 
     if place == 'inside':
         readings['pm2_5_channel_a'] = float(json_result['pm2_5_cf_1']) if 'pm2_5_cf_1' in json_result else None
