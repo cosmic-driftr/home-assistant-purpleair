@@ -1,4 +1,5 @@
 from datetime import timedelta
+from collections import deque
 import logging
 
 import math
@@ -187,27 +188,31 @@ def calc_heat_index(temp_f, humidity):
     return c1 + c2*t + c3*rh + c4*t*rh + c5*t*t + c6*rh*rh + c7*t*t*rh + c8*t*rh*rh + c9*t*t*rh*rh
 
 
-def process_heat_adjustments(json_result):
-    """Since the purple air devices are affected by heat from itself, modify readings to account for difference"""
-    raw_temp = float(json_result['current_temp_f'])
-    raw_rh = float(json_result['current_humidity'])
-    place = str(json_result.get('place', '')).strip().lower()
+def process_heat_adjustments(temp_operating, rh_operating, place):
+    """Calculate estimated temperature/humidity since enclosure design raises internal temperature"""
+    if temp_operating is None or rh_operating is None:
+        return {
+            'temp_estimated': None,
+            'rh_estimated': None,
+            'current_dewpoint': None,
+            'heat_index': None,
+        }
+
+    place = str(place).strip().lower()
 
     # Estimated corrections developed by Lance Wallace
     if place == 'inside':
         # Indoor correction equations
-        temp_est = (0.9733 * raw_temp) - 6.4149
-        rh_est = (1.3611 * raw_rh) + 5.1555
+        temp_est = (0.9733 * temp_operating) - 6.4149
+        rh_est = (1.3611 * rh_operating) + 5.1555
     else:
         # Outdoor correction equations
-        temp_est = (1.0227 * raw_temp) - 9.3755
-        rh_est = (1.4498 * raw_rh) + 7.022
-        
+        temp_est = (1.0227 * temp_operating) - 9.3755
+        rh_est = (1.4498 * rh_operating) + 7.022
+
     rh_est = max(0.0, min(100.0, rh_est))
 
     return {
-        'temp_operating': raw_temp,
-        'rh_operating': raw_rh,
         'temp_estimated': temp_est,
         'rh_estimated': rh_est,
         'current_dewpoint': calc_dewpoint(temp_est, rh_est),
@@ -342,6 +347,10 @@ class PurpleAirApi:
         self._scan_interval = timedelta(seconds=LOCAL_SCAN_INTERVAL)
         self._shutdown_interval = None
 
+        self._env_fast_interval = timedelta(seconds=5)
+        self._env_shutdown_interval = None
+        self._env_history = {}
+    
     def is_node_registered(self, pa_sensor_id):
         return pa_sensor_id in self._data
 
@@ -374,19 +383,71 @@ class PurpleAirApi:
                 dt.utcnow() + timedelta(seconds=5)
             )
 
+        if not self._env_shutdown_interval:
+            _LOGGER.debug('starting fast environment poll: %s', self._env_fast_interval)
+            self._env_shutdown_interval = async_track_time_interval(
+                self._hass,
+                self._update_env_fast,
+                self._env_fast_interval
+            )
+
+            async_track_point_in_utc_time(
+                self._hass,
+                self._update_env_fast,
+                dt.utcnow() + timedelta(seconds=1)
+            )
+
     def unregister_node(self, pa_sensor_id):
         if pa_sensor_id not in self._nodes:
             _LOGGER.debug('detected non-existent unregistration: %s', pa_sensor_id)
             return
 
         del self._nodes[pa_sensor_id]
+
+        if pa_sensor_id in self._env_history:
+            del self._env_history[pa_sensor_id]
+
         _LOGGER.debug('unregistered node: %s', pa_sensor_id)
 
-        if not self._nodes and self._shutdown_interval:
-            _LOGGER.debug('no more nodes, shutting down interval')
-            self._shutdown_interval()
-            self._shutdown_interval = None
+        if not self._nodes:
+            if self._shutdown_interval:
+                _LOGGER.debug('no more nodes, shutting down interval')
+                self._shutdown_interval()
+                self._shutdown_interval = None
 
+            if self._env_shutdown_interval:
+                _LOGGER.debug('no more nodes, shutting down fast environment interval')
+                self._env_shutdown_interval()
+                self._env_shutdown_interval = None
+
+    def _record_env_sample(self, pa_sensor_id, json_result):
+        if pa_sensor_id not in self._env_history:
+            self._env_history[pa_sensor_id] = {
+                'rh': deque(maxlen=24),    # 24 samples @ 5 sec = 2 minutes
+                'temp': deque(maxlen=24),
+            }
+
+        rh = json_result.get('current_humidity')
+        temp = json_result.get('current_temp_f')
+
+        if rh is not None:
+            self._env_history[pa_sensor_id]['rh'].append(float(rh))
+
+        if temp is not None:
+            self._env_history[pa_sensor_id]['temp'].append(float(temp))
+
+    def _get_env_average(self, pa_sensor_id):
+        history = self._env_history.get(pa_sensor_id)
+        if not history:
+            return (None, None)
+
+        rh_samples = history['rh']
+        temp_samples = history['temp']
+
+        rh_avg = sum(rh_samples) / len(rh_samples) if rh_samples else None
+        temp_avg = sum(temp_samples) / len(temp_samples) if temp_samples else None
+
+        return (rh_avg, temp_avg)
 
     async def _fetch_data(self, local_node_ips):
         if not local_node_ips:
@@ -412,6 +473,20 @@ class PurpleAirApi:
 
         return results
 
+    async def _update_env_fast(self, now=None):
+        local_node_ips = [n['ip_address'] for n in self._nodes.values()]
+        if not local_node_ips:
+            return
+
+        results = await self._fetch_data(local_node_ips)
+
+        for result in results:
+            pa_sensor_id = result.get('SensorId')
+            if pa_sensor_id is None:
+                continue
+
+            self._record_env_sample(pa_sensor_id, result)
+    
     async def _update(self, now=None):
         local_node_ips = [n['ip_address'] for n in self._nodes.values()]
         _LOGGER.debug('Purple Air nodes: %s', local_node_ips)
