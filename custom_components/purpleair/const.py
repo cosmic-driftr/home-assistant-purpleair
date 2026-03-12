@@ -43,6 +43,10 @@ PARTICLE_PROPS = ['pm1_0_atm', 'pm2_5_atm', 'pm10_0_atm', 'pm1_0_cf_1', 'pm2_5_c
 # Map of sensors to create entities for
 SENSORS_MAP = {
     'sensor_confidence':       {'key': 'pm2_5_raw_conf',   'uom': None, 'device_class': None, 'icon': 'mdi:seal'},
+    'pm0_3_count_a':           {'key': 'pm0_3_count_a',    'uom': 'particles/dL', 'device_class': None, 'icon': 'mdi:dots-grid'},
+    'pm0_3_count_b':           {'key': 'pm0_3_count_b',    'uom': 'particles/dL', 'device_class': None, 'icon': 'mdi:dots-grid'},
+    'pm2_5_raw_a':             {'key': 'pm2_5_raw_a',      'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM25, 'icon': 'mdi:blur'},
+    'pm2_5_raw_b':             {'key': 'pm2_5_raw_b',      'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM25, 'icon': 'mdi:blur'},
     'pm1_0_raw':               {'key': 'pm1_0_raw',        'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM1,  'icon': 'mdi:blur'},
     'pm2_5_raw':               {'key': 'pm2_5_raw',        'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM25, 'icon': 'mdi:blur'},
     'pm2_5_epa':               {'key': 'pm2_5_epa',        'uom': 'µg/m³', 'device_class': SensorDeviceClass.PM25, 'icon': 'mdi:blur'},
