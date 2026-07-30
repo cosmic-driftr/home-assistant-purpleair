@@ -465,11 +465,12 @@ class PurpleAirApi:
                 async with self._session.get(url) as response:
                     if response.status != 200:
                         _LOGGER.error('bad API response for %s: %s', url, response.status)
+                        continue
 
                     json = await response.json()
                     results.append(json)
-            except Exception:
-                _LOGGER.error('Unable to connect to purple air device: ' + url)
+            except Exception as err:
+                _LOGGER.error('Unable to connect to purple air device %s: %s', url, err)
 
         return results
 
@@ -495,39 +496,50 @@ class PurpleAirApi:
 
         nodes = {}
         for result in results:
-            pa_sensor_id = result['SensorId']
-            is_dual = 'pm2.5_aqi_b' in result
-            rh_avg, temp_avg = self._get_env_average(pa_sensor_id)
-
-            # Fallback if fast sampler has not populated history yet
-            if rh_avg is None and 'current_humidity' in result:
-                rh_avg = float(result['current_humidity'])
-            if temp_avg is None and 'current_temp_f' in result:
-                temp_avg = float(result['current_temp_f'])
-                
-            gas_680 = round(float(result['gas_680']))
             
-            nodes[pa_sensor_id] = {
-                'device_location': result.get('place'),
-                'rssi': result.get('rssi'),
-                'pressure': result.get('pressure'),
-                'gas_680': gas_680,
-                'voc_iaq_class': classify_voc_iaq(gas_680),
-                'uptime': result.get('uptime'),
+    pa_sensor_id = result.get('SensorId')
+            if pa_sensor_id is None:
+                _LOGGER.error('sensor response missing SensorId, skipping: %s', result)
+                continue
 
-                # Main operating values = 2-minute rolling average
-                'temp_operating': temp_avg,
-                'rh_operating': rh_avg,
+            try:
+                is_dual = 'pm2.5_aqi_b' in result
+                rh_avg, temp_avg = self._get_env_average(pa_sensor_id)
 
-                # Diagnostic values = real-time instantaneous readings
-                'temp_current': float(result['current_temp_f']) if 'current_temp_f' in result else None,
-                'rh_current': float(result['current_humidity']) if 'current_humidity' in result else None,
-            }
+                # Fallback if fast sampler has not populated history yet
+                if rh_avg is None and 'current_humidity' in result:
+                    rh_avg = float(result['current_humidity'])
+                if temp_avg is None and 'current_temp_f' in result:
+                    temp_avg = float(result['current_temp_f'])
 
-            nodes[pa_sensor_id].update(process_pm_readings(result, rh_avg, is_dual))
-            nodes[pa_sensor_id].update(process_heat_adjustments(temp_avg, rh_avg, result.get('place')))
-            _LOGGER.debug('Json results for %s: %s', pa_sensor_id, result)
-            _LOGGER.debug('Readings for %s: %s', pa_sensor_id, nodes[pa_sensor_id])
+                # gas_680 (Bosch BME680/688 VOC sensor) is only present on the
+                # PA-II-FLEX model — most PurpleAir devices don't report it.
+                gas_680 = round(float(result['gas_680'])) if 'gas_680' in result else None
 
+                nodes[pa_sensor_id] = {
+                    'device_location': result.get('place'),
+                    'rssi': result.get('rssi'),
+                    'pressure': result.get('pressure'),
+                    'gas_680': gas_680,
+                    'voc_iaq_class': classify_voc_iaq(gas_680),
+                    'uptime': result.get('uptime'),
+
+                    # Main operating values = 2-minute rolling average
+                    'temp_operating': temp_avg,
+                    'rh_operating': rh_avg,
+
+                    # Diagnostic values = real-time instantaneous readings
+                    'temp_current': float(result['current_temp_f']) if 'current_temp_f' in result else None,
+                    'rh_current': float(result['current_humidity']) if 'current_humidity' in result else None,
+                }
+
+                nodes[pa_sensor_id].update(process_pm_readings(result, rh_avg, is_dual))
+                nodes[pa_sensor_id].update(process_heat_adjustments(temp_avg, rh_avg, result.get('place')))
+                _LOGGER.debug('Json results for %s: %s', pa_sensor_id, result)
+                _LOGGER.debug('Readings for %s: %s', pa_sensor_id, nodes[pa_sensor_id])
+            except Exception:
+                _LOGGER.exception('Failed to process reading for sensor %s, skipping this cycle', pa_sensor_id)
+                nodes.pop(pa_sensor_id, None) 
+                
         self._data = nodes
         async_dispatcher_send(self._hass, DISPATCHER_PURPLE_AIR)
